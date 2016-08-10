@@ -14,9 +14,9 @@ sys     0m0.591s
 ```
 
 ```
-time results -d ~/Desktop/general/20121106-national.json --json > /tmp/test.csv
+time results -d ~/Desktop/general/20121106-national.json --csv > /tmp/test.csv
 
-real    0m2.526s
-user    0m1.985s
-sys     0m0.501s
+real    0m4.466s
+user    0m3.947s
+sys     0m0.484s
 ```
