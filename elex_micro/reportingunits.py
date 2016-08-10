@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
 import argparse
-from sets import Set
 
 import ujson
 
 import utils
+
 
 def main():
     parser = argparse.ArgumentParser(description='Return AP Election data')
