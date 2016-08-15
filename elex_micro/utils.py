@@ -1,8 +1,41 @@
 import csv
+from collections import namedtuple
 import sys
 from sets import Set
 
 import ujson
+
+
+candidate_rerporting_unit_template = {
+    u'incumbent': None,
+    u'electiondate': None,
+    u'candidateid': None,
+    u'raceid': None,
+    u'precinctsreporting': None,
+    u'officeid': None,
+    u'ballotorder': None,
+    u'fipscode': None,
+    u'reportingunitname': None,
+    u'winner': None,
+    u'lastupdated': None,
+    u'polid': None,
+    u'test': None,
+    u'party': None,
+    u'racetypeid': None,
+    u'description': None,
+    u'precinctsreportingpct': None,
+    u'polnum': None,
+    u'level': None,
+    u'reportingunitid': None,
+    u'precinctstotal': None,
+    u'last': None,
+    u'statepostal': None,
+    u'racetype': None,
+    u'officename': None,
+    u'votecount': None,
+    u'seatname': None,
+    u'votepct': 0.0
+}
 
 
 def output_json(payload):
@@ -26,6 +59,19 @@ def output_csv(payload):
 
     for p in payload:
         writer.writerow(p)
+
+
+def open_file(file_path, race_ids=None):
+    """
+    Opens and returns an AP JSON file.
+    """
+    with open(file_path, 'r') as readfile:
+        parsed_json = ujson.loads(readfile.read())
+        electiondate = parsed_json['electionDate']
+        if race_ids:
+            return (electiondate, [r for r in parsed_json['races'] if r in race_ids])
+        else:
+            return (electiondate, parsed_json['races'])
 
 
 def load_races(races):
@@ -84,17 +130,19 @@ def load_reportingunits(races):
     return payload
 
 
-def load_results(races):
+def load_results(electiondate, races):
     """
     Given a list of AP JSON races, returns candidate-reportingunit-race
     objects, e.g., results.
     """
+
     payload = []
 
     for r in races:
         if r.get('reportingUnits', None):
             for ru in r['reportingUnits']:
                 for c in ru['candidates']:
+                    cru = candidate_rerporting_unit_template.copy()
 
                     # Add reporting unit data to the candidate.
                     for k, v in ru.items():
@@ -108,7 +156,14 @@ def load_results(races):
 
                     c = {k.lower(): v for k, v in c.items()}
 
+                    if c['level'] == 'state':
+                        c['reportingunitid'] = c['statepostal']
+
+                    c['electiondate'] = electiondate
+
+                    cru.update(c)
+
                     # The result is a single dict for each candidate-reportingunit-race.
-                    payload.append(c)
+                    payload.append(cru)
 
     return payload

@@ -1,0 +1,77 @@
+{
+  "guides": [
+    {
+      "type": "Developer Guide",
+      "href": "http://customersupport.ap.org/doc/eln/AP_Elections_API_Developer_Guide.pdf"
+    },
+    {
+      "type": "Release Notes",
+      "href": "http://customersupport.ap.org/doc/eln/AP_Elections_API_ReleaseNotes.pdf"
+    },
+    {
+      "type": "Calendar 2015",
+      "href": "http://customersupport.ap.org/doc/eln/2015_Election_Calendar.pdf"
+    },
+    {
+      "type": "Calendar 2016",
+      "href": "http://customersupport.ap.org/doc/eln/2016_Election_Calendar.pdf"
+    }
+  ],
+  "queryExplorer": "https://api.ap.org/v2/elections/xplor",
+  "reportQueries": [
+    {
+      "type": "Live Reports",
+      "href": "http://api.ap.org/v2/reports"
+    },
+    {
+      "type": "Test Reports",
+      "href": "http://api.ap.org/v2/reports?test=true"
+    }
+  ],
+  "elections": [
+    {
+      "electionDate": "2012-03-13",
+      "liveResults": true
+    },
+    {
+      "electionDate": "2015-05-19",
+      "liveResults": true
+    },
+    {
+      "electionDate": "2015-06-02",
+      "liveResults": true
+    },
+    {
+      "electionDate": "2015-06-09",
+      "liveResults": true
+    },
+    {
+      "electionDate": "2015-08-04",
+      "testResults": true
+    },
+    {
+      "electionDate": "2015-08-25",
+      "liveResults": true
+    },
+    {
+      "electionDate": "2015-09-10",
+      "liveResults": true
+    },
+    {
+      "electionDate": "2015-11-03",
+      "liveResults": true
+    },
+    {
+      "electionDate": "2015-11-21",
+      "testResults": true
+    },
+    {
+      "electionDate": "2016-02-01",
+      "testResults": true
+    },
+    {
+      "electionDate": "2016-02-09",
+      "testResults": true
+    }
+  ]
+}

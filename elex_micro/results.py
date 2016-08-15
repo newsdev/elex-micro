@@ -23,13 +23,8 @@ def main():
         if args.races:
             race_ids = args.races.split(',')
 
-        with open(args.file, 'r') as readfile:
-            if race_ids:
-                races = [r for r in ujson.loads(readfile.read())['races'] if r in race_ids]
-            else:
-                races = ujson.loads(readfile.read())['races']
-
-        payload = utils.load_results(races)
+        electiondate, races = utils.open_file(args.file, race_ids)
+        payload = utils.load_results(electiondate, races)
 
         if args.json:
             utils.output_json(payload)
