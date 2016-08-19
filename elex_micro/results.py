@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import cProfile
 
 import ujson
 
@@ -14,6 +15,7 @@ def main():
     parser.add_argument('-o', '--output', action='store')
     parser.add_argument('--json', action='store_true')
     parser.add_argument('--csv', action='store_true')
+    parser.add_argument('--tsv', action='store_true')
 
     args = parser.parse_args()
 
@@ -24,14 +26,17 @@ def main():
             race_ids = args.races.split(',')
 
         electiondate, races = utils.open_file(args.file, race_ids)
-        payload,votecounts = utils.load_results(electiondate, races)
-        payload = utils.calculate_pcts(payload, votecounts)
+        payload = utils.load_results(electiondate, races)
 
         if args.json:
             utils.output_json(payload)
 
         elif args.output and args.output == 'json':
-                utils.output_json(payload)
+            utils.output_json(payload)
+
+        elif args.output and args.output == 'tsv':
+            utils.output_tsv(payload)
+
         else:
             utils.output_csv(payload)
 
@@ -39,4 +44,5 @@ def main():
         print """Please specify a data file with -d '/path/to/json/file.json'"""
 
 if __name__ == "__main__":
+    # cProfile.run('main()')
     main()

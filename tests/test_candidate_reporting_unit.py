@@ -7,8 +7,7 @@ class TestCandidateReportingUnit(unittest.TestCase):
 
     def setUp(self):
         self.electiondate, races = utils.open_file(self.file_path)
-        self.candidate_reporting_units, votecounts = utils.load_results(self.electiondate, races)
-        self.candidate_reporting_units = utils.calculate_pcts(self.candidate_reporting_units, votecounts)
+        self.candidate_reporting_units = utils.load_results(self.electiondate, races)
 
     def test_cru_has_keys(self):
         c = self.candidate_reporting_units[0]
@@ -72,7 +71,7 @@ class TestCandidateReportingUnit(unittest.TestCase):
 
     def test_candidate_reporting_unit_get_units_construction_winner(self):
         cru = self.candidate_reporting_units[(4 * 64) + 1]
-        self.assertEqual(cru['winner'], False)
+        self.assertEqual(cru['winner'], None)
 
     def test_candidate_reporting_unit_count(self):
         self.assertEqual(len(self.candidate_reporting_units), 505)
@@ -94,56 +93,9 @@ class TestCandidateReportingUnit(unittest.TestCase):
 
     def test_candidate_reporting_unit_get_units_construction_incumbent(self):
         cru = self.candidate_reporting_units[(4 * 64) + 1]
-        self.assertEqual(cru['incumbent'], False)
+        self.assertEqual(cru['incumbent'], None)
 
 
     def test_candidate_reporting_unit_get_units_construction_votepct(self):
         cru = self.candidate_reporting_units[(4 * 64) + 1]
         self.assertEqual(cru['votepct'], 0.45652173913043476)
-
-    def test_candidate_reporting_unit_serialization_order(self):
-        cru = list(self.candidate_reporting_units[(4 * 64) + 1])
-        self.assertEqual(
-            cru,
-            [
-                'id',
-                'raceid',
-                'racetype',
-                'racetypeid',
-                'ballotorder',
-                'candidateid',
-                'description',
-                'delegatecount',
-                'electiondate',
-                'fipscode',
-                'first',
-                'incumbent',
-                'initialization_data',
-                'is_ballot_measure',
-                'last',
-                'lastupdated',
-                'level',
-                'national',
-                'officeid',
-                'officename',
-                'party',
-                'polid',
-                'polnum',
-                'precinctsreporting',
-                'precinctsreportingpct',
-                'precinctstotal',
-                'reportingunitid',
-                'reportingunitname',
-                'runoff',
-                'seatname',
-                'seatnum',
-                'statename',
-                'statepostal',
-                'test',
-                'totalvotes',
-                'uncontested',
-                'votecount',
-                'votepct',
-                'winner'
-            ]
-        )
