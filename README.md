@@ -5,6 +5,7 @@ Everything you like about Elex, only less.
 
 ```
 time elex results 2012-11-02 -d '/Users/jbowers/Desktop/general/20121106-national.json' > /tmp/test.csv
+
 2016-08-19 11:58:29,120 (INFO) elex (v2.0.9) : Getting results for election 2012-11-06
 
 real    0m10.245s
