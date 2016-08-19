@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 
 import argparse
-import cProfile
-
-import ujson
 
 import utils
 

@@ -2,6 +2,7 @@ import unittest
 
 import utils
 
+
 class TestCandidateReportingUnit(unittest.TestCase):
     file_path = 'tests/data/20151103_national.json'
 
@@ -94,7 +95,6 @@ class TestCandidateReportingUnit(unittest.TestCase):
     def test_candidate_reporting_unit_get_units_construction_incumbent(self):
         cru = self.candidate_reporting_units[(4 * 64) + 1]
         self.assertEqual(cru['incumbent'], None)
-
 
     def test_candidate_reporting_unit_get_units_construction_votepct(self):
         cru = self.candidate_reporting_units[(4 * 64) + 1]

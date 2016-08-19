@@ -1,7 +1,5 @@
 import csv
-from collections import namedtuple, defaultdict, OrderedDict
 import sys
-from sets import Set
 
 import ujson
 
@@ -73,8 +71,7 @@ def output_csv(payload):
 
     for p in payload:
         writer.writerow(p)
-    # df = pandas.DataFrame(payload)
-    # df.to_csv(sys.stdout, encoding='utf-8', index=False)
+
 
 def output_tsv(payload):
     sys.stdout.write("\t".join(payload[0].keys()))
@@ -161,6 +158,7 @@ def aggregate_votecounts(votecounts, c, r):
     else:
         votecounts[r['raceID']][c['reportingunitid']] += c['votecount']
     return votecounts
+
 
 def compute_pcts(payload, votecounts):
     """
