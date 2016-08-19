@@ -24,7 +24,8 @@ def main():
             race_ids = args.races.split(',')
 
         electiondate, races = utils.open_file(args.file, race_ids)
-        payload = utils.load_results(electiondate, races)
+        payload,votecounts = utils.load_results(electiondate, races)
+        payload = utils.calculate_pcts(payload, votecounts)
 
         if args.json:
             utils.output_json(payload)
