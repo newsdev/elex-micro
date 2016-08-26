@@ -2,7 +2,7 @@
 Everything you like about Elex, only less.
 
 ## What?
-Elex-micro is a Python library for returning results, and only results, from the AP Election v2.0 API. It is related to, but conceptually distinct from, [Elex](), a more fully-featured wrapper.
+Elex-micro is a Python library for returning results, and only results, from the AP Election v2.0 API. It is related to, but conceptually distinct from, [Elex](https://github.com/newsdev/elex), a more fully-featured wrapper.
 
 ## Why?
 At The New York Times, we need our results just a little bit faster. And by "a little bit" I mean "about twice as fast."
