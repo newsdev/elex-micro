@@ -208,6 +208,8 @@ def load_results(electiondate, races):
                     # Add reporting unit data to the candidate.
                     for k, v in ru.items():
                         if k not in ['candidates', 'votecount']:
+                            if k == 'precinctsReportingPct':
+                                v = float(v) / 100
                             c[k] = v
 
                     # Add race data to the candidate.

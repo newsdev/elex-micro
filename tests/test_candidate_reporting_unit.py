@@ -4,10 +4,10 @@ import utils
 
 
 class TestCandidateReportingUnit(unittest.TestCase):
-    file_path = 'tests/data/20151103_national.json'
+    data_url = 'tests/data/20151103_national.json'
 
     def setUp(self):
-        self.electiondate, races = utils.open_file(self.file_path)
+        self.electiondate, races = utils.open_file(self.data_url)
         self.candidate_reporting_units = utils.load_results(self.electiondate, races)
 
     def test_cru_has_keys(self):
