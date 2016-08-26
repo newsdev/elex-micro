@@ -3,6 +3,7 @@ try:
 except NameError:
     from sets import Set as set
 
+import maps
 import tests
 
 
