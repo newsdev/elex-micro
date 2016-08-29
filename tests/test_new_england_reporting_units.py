@@ -5,7 +5,6 @@ except NameError:
 import unittest
 
 import maps
-import tests
 import utils
 
 

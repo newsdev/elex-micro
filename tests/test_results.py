@@ -5,8 +5,8 @@ except NameError:
 import unittest
 
 import maps
-import tests
 import utils
+
 
 class TestPrecinctsReportingPctFloat(unittest.TestCase):
     data_url = 'tests/data/20160301_super_tuesday.json'

@@ -4,8 +4,6 @@ except NameError:
     from sets import Set as set
 import unittest
 
-import maps
-import tests
 import utils
 
 
