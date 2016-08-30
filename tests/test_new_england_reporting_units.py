@@ -121,7 +121,9 @@ class TestMaineEdgeCaseReportingUnits(unittest.TestCase):
         maine_results = [
             r for r in self.candidate_reporting_units if r['raceid'] == '20852'
         ]
-        self.assertEqual(len(maine_results), 2)
+
+        # There should be two results for each candidate.
+        self.assertEqual(len(maine_results), 20)
 
     def test_one_state_level_unit(self):
         maine_results = [
@@ -130,7 +132,9 @@ class TestMaineEdgeCaseReportingUnits(unittest.TestCase):
         maine_state_level_units = [
             r for r in maine_results if r['level'] == 'state'
         ]
-        self.assertEqual(len(maine_state_level_units), 1)
+
+        # There should be one result for each candidate.
+        self.assertEqual(len(maine_state_level_units), 10)
 
     def test_one_subunit(self):
         maine_results = [
@@ -139,7 +143,9 @@ class TestMaineEdgeCaseReportingUnits(unittest.TestCase):
         maine_subunits = [
             r for r in maine_results if r['level'] == 'state'
         ]
-        self.assertEqual(len(maine_subunits), 1)
+
+        # There should be one result for each candidate.
+        self.assertEqual(len(maine_subunits), 10)
 
 
 # class TestNewEnglandReportingUnits(unittest.TestCase):

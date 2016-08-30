@@ -49,6 +49,7 @@ class TestMassRollupBug(unittest.TestCase):
             r['level'] == 'county' and
             r['last'] == 'Trump'
         ]
+
         self.assertEqual(len(mass_results), len(maps.FIPS_TO_STATE['MA']))
 
 

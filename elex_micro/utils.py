@@ -200,101 +200,104 @@ def compute_pcts(payload, votecounts):
     return payload
 
 
-    def set_new_england_counties(r):
-        if r['statepostal'] in maps.FIPS_TO_STATE.keys():
+def set_new_england_counties(r):
+
+    state_postal = r['reportingUnits'][-1]['statePostal']
+
+    # Only engage the rollups if this is a new england state.
+    if state_postal:
+        if state_postal in maps.FIPS_TO_STATE.keys():
 
             counties = {}
 
-            for c in maps.FIPS_TO_STATE[r['statepostal']].keys():
+            for c in maps.FIPS_TO_STATE[state_postal].keys():
                 try:
                     counties[c] = dict([
-                        r.__dict__ for
-                        r in r['reportingunits'] if
-                        r.level == 'township' and
-                        "Mail Ballots C.D." not in r.reportingunitname and
-                        r.fipscode == c
+                        z for
+                        z in r['reportingUnits'] if
+                        z['level'] == 'subunit' and
+                        "Mail Ballots C.D." not in z['reportingunitName'] and
+                        z['fipsCode'] == c
                     ][0])
 
                     # Set some basic information we know about the county.
                     counties[c]['level'] = 'county'
-                    counties[c]['statepostal'] = r['statepostal']
+                    counties[c]['statePostal'] = state_postal
                     counties[c]['candidates'] = {}
-                    counties[c]['reportingunitname'] =\
-                        maps.FIPS_TO_STATE[r['statepostal']][c]
-                    counties[c]['reportingunitid'] = "%s-%s" % (
-                        r['statepostal'],
+                    counties[c]['reportingunitName'] =\
+                        maps.FIPS_TO_STATE[state_postal][c]
+                    counties[c]['reportingunitID'] = "%s-%s" % (
+                        state_postal,
                         c
                     )
 
                     reporting_units = [
-                        r for
-                        r in r['reportingunits'] if
-                        r.level == 'township' and
-                        "Mail Ballots C.D." not in r.reportingunitname and
-                        r.fipscode == c
+                        z for
+                        z in r['reportingUnits'] if
+                        z['level'] == 'subunit' and
+                        "Mail Ballots C.D." not in z['reportingunitName'] and
+                        z['fipsCode'] == c
                     ]
 
-                    # Declaratively sum the precincts / votes for this county.
-                    counties[c]['precinctstotal'] = sum([
-                        r.precinctstotal for
-                        r in reporting_units if
-                        r.level == 'township' and
-                        "Mail Ballots C.D." not in r.reportingunitname and
-                        r.fipscode == c
+                    # Declaratively sum the precincts for this county.
+                    counties[c]['precinctsTotal'] = sum([
+                        z['precinctsTotal'] for
+                        z in reporting_units if
+                        z['level'] == 'subunit' and
+                        "Mail Ballots C.D." not in z['reportingunitName'] and
+                        z['fipsCode'] == c
                     ])
-                    counties[c]['precinctsreporting'] = sum([
-                        r.precinctsreporting for
-                        r in reporting_units if
-                        r.level == 'township' and
-                        "Mail Ballots C.D." not in r.reportingunitname and
-                        r.fipscode == c
+                    counties[c]['precinctsReporting'] = sum([
+                        z['precinctsReporting'] for
+                        z in reporting_units if
+                        z['level'] == 'subunit' and
+                        "Mail Ballots C.D." not in z['reportingunitName'] and
+                        z['fipsCode'] == c
                     ])
 
-                    pcts_tot = float(counties[c]['precinctstotal'])
-                    pcts_rep = float(counties[c]['precinctsreporting'])
+                    pcts_tot = float(counties[c]['precinctsTotal'])
+                    pcts_rep = float(counties[c]['precinctsReporting'])
 
                     try:
-                        counties[c]['precinctsreportingpct'] = pcts_rep / pcts_tot
+                        counties[c]['precinctsReportingPct'] = (pcts_rep / pcts_tot) * 100
                     except ZeroDivisionError:
-                        counties[c]['precinctsreportingpct'] = 0.0
+                        counties[c]['precinctsReportingPct'] = 0.0
 
-                    counties[c]['votecount'] = sum([
-                        int(r.votecount or 0) for
-                        r in reporting_units if
-                        r.level == 'township' and
-                        "Mail Ballots C.D." not in r.reportingunitname and
-                        r.fipscode == c
-                    ])
-
-                    for r in reporting_units:
+                    for z in reporting_units:
 
                         # Set up candidates for each county.
-                        for cru in r.candidates:
-                            if not counties[c]['candidates'].get(cru.unique_id, None):
-                                d = dict(cru.__dict__)
+                        for cru in z['candidates']:
+
+                            cru['raceid'] = r['raceID']
+                            cru['level'] = z['level']
+
+                            cru['reportingunitid'] = z['reportingunitID']
+
+                            cru = lowercase_keys(cru)
+                            cru = set_reportingunitid(cru)
+                            cru = set_uniqueid(cru)
+
+                            if not counties[c]['candidates'].get(cru['id'], None):
+                                d = dict(cru)
                                 d['level'] = 'county'
-                                d['reportingunitid'] = "%s-%s" % (
-                                    r['statepostal'],
-                                    c
-                                )
-                                fips_dict = maps.FIPS_TO_STATE[r['statepostal']]
-                                d['reportingunitname'] = fips_dict[c]
-                                counties[c]['candidates'][cru.unique_id] = d
+                                fips_dict = maps.FIPS_TO_STATE[z['statePostal']]
+                                d['reportingunitName'] = fips_dict[c]
+                                counties[c]['candidates'][cru['id']] = d
 
                             else:
-                                d = counties[c]['candidates'][cru.unique_id]
-                                d['votecount'] += cru.votecount
-                                d['precinctstotal'] += cru.precinctstotal
-                                d['precinctsreporting'] += cru.precinctsreporting
+                                d = counties[c]['candidates'][cru['id']]
+                                d['votecount'] += cru['votecount']
+                                d['precinctsTotal'] += cru['precinctsTotal']
+                                d['precinctsreporting'] += cru['precinctsReporting']
 
                                 try:
-                                    d['precinctsreportingpct'] = (
-                                        float(d['precinctsreporting']) /
-                                        float(d['precinctstotal'])
+                                    d['precinctsReportingPct'] = (
+                                        float(d['precinctsReporting']) /
+                                        float(d['precinctsTotal'])
                                     )
 
                                 except ZeroDivisionError:
-                                    d['precinctsreportingpct'] = 0.0
+                                    d['precinctsReportingPct'] = 0.0
 
                 except IndexError:
                     """
@@ -305,9 +308,8 @@ def compute_pcts(payload, votecounts):
             try:
                 for ru in counties.values():
                     ru['candidates'] = ru['candidates'].values()
-                    ru['statename'] = str(maps.STATE_ABBR[ru['statepostal']])
-                    r = ReportingUnit(**ru)
-                    r['reportingunits'].append(r)
+                    ru['statename'] = str(maps.STATE_ABBR[ru['statePostal']])
+                    r['reportingUnits'].append(ru)
 
             except AttributeError:
                 """
@@ -315,6 +317,8 @@ def compute_pcts(payload, votecounts):
                 roll up into counties. Issue #228.
                 """
                 pass
+
+    return r
 
 
 def load_results(electiondate, races):
@@ -332,6 +336,10 @@ def load_results(electiondate, races):
             # Create data structure for aggregating votes.
             if not votecounts.get(r['raceID'], None):
                 votecounts[r['raceID']] = {}
+
+            # Create fake county records for new england townships
+            # by rolling them up by fips code.
+            r = set_new_england_counties(r)
 
             for ru in r['reportingUnits']:
                 for c in ru['candidates']:
